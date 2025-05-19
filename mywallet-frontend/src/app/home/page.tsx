@@ -17,14 +17,14 @@ export default function Home() {
         </div>
       </div>
       <div className="flex gap-4 mt-6 w-full max-w-xs sm:max-w-md">
-        <button className="flex-1 flex flex-col items-start justify-end bg-[#A259FF] rounded-lg p-4 text-white font-bold text-lg min-h-[90px]">
+        <Link href="/nova-entrada" className="flex-1 flex flex-col items-start justify-end bg-[#A259FF] rounded-lg p-4 text-white font-bold text-lg min-h-[90px] transition hover:bg-[#7c1fd1]">
           <span className="text-2xl mb-2">＋</span>
           Nova entrada
-        </button>
-        <button className="flex-1 flex flex-col items-start justify-end bg-[#A259FF] rounded-lg p-4 text-white font-bold text-lg min-h-[90px]">
+        </Link>
+        <Link href="/nova-saida" className="flex-1 flex flex-col items-start justify-end bg-[#A259FF] rounded-lg p-4 text-white font-bold text-lg min-h-[90px] transition hover:bg-[#7c1fd1]">
           <span className="text-2xl mb-2">－</span>
           Nova saída
-        </button>
+        </Link>
       </div>
     </div>
   );
