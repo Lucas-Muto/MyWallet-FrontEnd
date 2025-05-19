@@ -14,7 +14,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mt-8 mb-6 text-center">Tela Inicial</h1>
       <div className="bg-[#8C1AFF] w-full max-w-xs sm:max-w-md rounded-xl flex flex-col items-center py-16 px-6 shadow-lg">
         <h2 className="text-white text-4xl font-bold mb-10 font-mono tracking-wider select-none">
           MyWallet

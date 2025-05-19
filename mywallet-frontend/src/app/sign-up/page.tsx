@@ -16,7 +16,6 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="text-4xl font-bold mt-8 mb-6 text-center">Criação de conta</h1>
       <div className="bg-[#8C1AFF] w-full max-w-xs sm:max-w-md rounded-xl flex flex-col items-center py-16 px-6 shadow-lg">
         <h2 className="text-white text-4xl font-bold mb-10 font-mono tracking-wider select-none">
           MyWallet
@@ -57,6 +56,7 @@ export default function SignUp() {
           <button
             type="submit"
             className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#7c1fd1]"
+            style={{ boxShadow: '0 2px 8px 0 rgba(162,89,255,0.15)' }}
           >
             Cadastrar
           </button>
