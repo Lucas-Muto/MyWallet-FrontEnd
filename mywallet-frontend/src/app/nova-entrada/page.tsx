@@ -14,7 +14,7 @@ export default function NovaEntrada() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="bg-white w-full max-w-xs sm:max-w-md rounded-xl flex flex-col items-center py-12 px-6 shadow-lg">
-        <h2 className="text-[#8C11BE] text-2xl font-bold mb-8">Nova entrada</h2>
+        <h2 className="text-[#A259FF] text-2xl font-bold mb-8">Nova entrada</h2>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
           <input
             type="number"
@@ -36,7 +36,7 @@ export default function NovaEntrada() {
           />
           <button
             type="submit"
-            className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#7c1fd1]"
+            className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#A259FF]]"
           >
             Salvar entrada
           </button>

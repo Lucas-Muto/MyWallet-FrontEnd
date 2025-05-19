@@ -12,8 +12,21 @@ export default function Home() {
             <span className="material-symbols-outlined">logout</span>
           </button>
         </div>
-        <div className="flex-1 flex items-center justify-center min-h-[200px]">
-          <span className="text-gray-400 text-center text-lg">Não há registros de entrada ou saída</span>
+        <div className="flex-1 flex flex-col gap-2 min-h-[200px] bg-white rounded-lg p-2">
+          <div className="flex items-center justify-between text-gray-400 text-sm">
+            <span>30/11</span>
+            <span className="flex-1 ml-2 text-black">Almoço mãe</span>
+            <span className="text-red-500 font-medium ml-2">39,90</span>
+          </div>
+          <div className="flex items-center justify-between text-gray-400 text-sm">
+            <span>27/11</span>
+            <span className="flex-1 ml-2 text-black">Salário</span>
+            <span className="text-green-500 font-medium ml-2">3000,00</span>
+          </div>
+          <div className="flex items-center justify-between font-bold mt-4 border-t pt-2">
+            <span className="text-black">SALDO</span>
+            <span className="text-green-500">2960,10</span>
+          </div>
         </div>
       </div>
       <div className="flex gap-4 mt-6 w-full max-w-xs sm:max-w-md">
