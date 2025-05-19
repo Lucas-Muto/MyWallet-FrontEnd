@@ -7,8 +7,8 @@ export default function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="bg-white w-full max-w-xs sm:max-w-md rounded-xl flex flex-col py-8 px-6 shadow-lg relative">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-[#8C11BE] text-2xl font-bold">Olá, Fulano</h2>
-          <button title="Sair" className="text-[#8C11BE] text-2xl font-bold">
+          <h2 className="text-[#A259FF] text-2xl font-bold">Olá, Fulano</h2>
+          <button title="Sair" className="text-[#A259FF] text-2xl font-bold">
             <span className="material-symbols-outlined">logout</span>
           </button>
         </div>
