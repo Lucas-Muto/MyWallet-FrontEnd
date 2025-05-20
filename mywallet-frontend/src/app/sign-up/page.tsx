@@ -23,8 +23,8 @@ export default function SignUp() {
     }
     setLoading(true);
     try {
-      await signUp({ name, email, password });
-      router.push("/");
+      await signUp({ name, email, password, confirmPassword });
+      router.push("/home");
     } catch (err: any) {
       setError(err?.message || "Erro ao cadastrar");
     } finally {

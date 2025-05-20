@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getTransactions } from "../api";
+import { getTransactions, deleteTransaction } from "../api";
+import { IoTrashOutline, IoExitOutline } from "react-icons/io5";
 
 interface Transaction {
   _id: string;
@@ -32,9 +33,10 @@ export default function Home() {
     setLoading(true);
     getTransactions(token)
       .then((data) => {
-        setTransactions(data.transactions || []);
+        const txs = Array.isArray(data) ? data : data.transactions || [];
+        setTransactions(txs);
         setSaldo(
-          (data.transactions || []).reduce(
+          txs.reduce(
             (acc: number, t: Transaction) =>
               t.type === "deposit"
                 ? acc + t.value
@@ -47,6 +49,36 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, [router]);
 
+  function formatDate(dateString: string) {
+    if (!dateString) return "";
+    const data = new Date(dateString);
+    if (isNaN(data.getTime())) return "";
+    // Corrige fuso horário para exibir corretamente no Brasil
+    const dia = String(data.getUTCDate()).padStart(2, '0');
+    const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+    return `${dia}/${mes}`;
+  }
+
+  async function handleDelete(id: string) {
+    if (!window.confirm("Tem certeza que deseja deletar esta transação?")) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
+    setLoading(true);
+    try {
+      await deleteTransaction(id, token);
+      setTransactions((prev) => prev.filter((t) => t._id !== id));
+    } catch (err: any) {
+      setError(err?.message || "Erro ao deletar transação");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    router.replace("/");
+  }
+
   if (!checkedAuth) return null;
 
   return (
@@ -54,8 +86,8 @@ export default function Home() {
       <div className="bg-white w-full max-w-xs sm:max-w-md rounded-xl flex flex-col py-8 px-6 shadow-lg relative">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-[#8C11BE] text-2xl font-bold">Olá, Fulano</h2>
-          <button title="Sair" className="text-[#8C11BE] text-2xl font-bold">
-            <span className="material-symbols-outlined">logout</span>
+          <button title="Sair" className="text-[#8C11BE] text-2xl font-bold" onClick={handleLogout}>
+            <IoExitOutline size={28} />
           </button>
         </div>
         <div className="flex-1 flex flex-col gap-2 min-h-[200px] bg-white rounded-lg p-2">
@@ -65,9 +97,11 @@ export default function Home() {
             <span className="text-gray-400 text-center text-lg">Não há registros de entrada ou saída</span>
           )}
           {!loading && !error && transactions.map((t) => (
-            <div key={t._id} className="flex items-center justify-between text-gray-400 text-sm">
-              <span>{new Date(t.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}</span>
-              <span className="flex-1 ml-2 text-black">{t.description}</span>
+            <div key={t._id} className="flex items-center justify-between text-gray-400 text-sm group">
+              <span>{formatDate(t.createdAt)}</span>
+              <Link href={`/editar/${t._id}`} className="flex-1 ml-2 text-black hover:underline cursor-pointer">
+                {t.description}
+              </Link>
               <span className={
                 t.type === "deposit"
                   ? "text-green-500 font-medium ml-2"
@@ -75,6 +109,13 @@ export default function Home() {
               }>
                 {t.value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
               </span>
+              <button
+                title="Deletar transação"
+                className="ml-2 text-gray-400 hover:text-red-600 transition"
+                onClick={() => handleDelete(t._id)}
+              >
+                <IoTrashOutline size={20} />
+              </button>
             </div>
           ))}
           {!loading && !error && transactions.length > 0 && (
