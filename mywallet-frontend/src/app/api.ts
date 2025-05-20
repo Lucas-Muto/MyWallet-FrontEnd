@@ -72,4 +72,12 @@ export async function updateTransaction(id: string, { value, description, type, 
   });
   if (!res.ok) return handleError(res);
   return res.text();
+}
+
+export async function getProfile(token: string) {
+  const res = await fetch(`${API_URL}/profile`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (!res.ok) return handleError(res);
+  return res.json();
 } 

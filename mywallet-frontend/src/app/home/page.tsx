@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { getTransactions, deleteTransaction } from "../api";
-import { IoTrashOutline, IoExitOutline } from "react-icons/io5";
+import { getTransactions, deleteTransaction, getProfile } from "../api";
+import { IoTrashOutline, IoExitOutline, IoDownloadOutline } from "react-icons/io5";
 
 interface Transaction {
   _id: string;
   value: number;
   description: string;
   type: "deposit" | "withdraw";
-  createdAt: string;
+  date: string;
 }
 
 export default function Home() {
@@ -20,6 +20,8 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [saldo, setSaldo] = useState(0);
   const [checkedAuth, setCheckedAuth] = useState(false);
+  const [userName, setUserName] = useState<string>("");
+  const [loadingName, setLoadingName] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -30,6 +32,20 @@ export default function Home() {
       return;
     }
     setCheckedAuth(true);
+    setLoadingName(true);
+    if (typeof getProfile === "function") {
+      getProfile(token)
+        .then((data) => setUserName(data.name || ""))
+        .catch(() => {
+          const localName = localStorage.getItem("userName") || "";
+          setUserName(localName);
+        })
+        .finally(() => setLoadingName(false));
+    } else {
+      const localName = localStorage.getItem("userName") || "";
+      setUserName(localName);
+      setLoadingName(false);
+    }
     setLoading(true);
     getTransactions(token)
       .then((data) => {
@@ -53,10 +69,21 @@ export default function Home() {
     if (!dateString) return "";
     const data = new Date(dateString);
     if (isNaN(data.getTime())) return "";
-    // Corrige fuso horário para exibir corretamente no Brasil
-    const dia = String(data.getUTCDate()).padStart(2, '0');
-    const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+    // Usa data local (Brasil)
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
     return `${dia}/${mes}`;
+  }
+
+  // Para exportação CSV, inclui o ano
+  function formatDateCSV(dateString: string) {
+    if (!dateString) return "";
+    const data = new Date(dateString);
+    if (isNaN(data.getTime())) return "";
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+    return `${dia}/${mes}/${ano}`;
   }
 
   async function handleDelete(id: string) {
@@ -79,13 +106,44 @@ export default function Home() {
     router.replace("/");
   }
 
+  // Função para exportar para CSV
+  function exportToCSV() {
+    if (!transactions.length) return;
+    const header = 'Resumo;Valor;Data;Tipo\n';
+    const rows = transactions.map(t => {
+      const descricao = '"' + t.description.replace(/"/g, '""') + '"';
+      const valorNumerico = t.type === 'withdraw' ? -Math.abs(t.value) : Math.abs(t.value);
+      const valor = valorNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      const data = formatDateCSV(t.date);
+      const tipo = t.type === 'withdraw' ? 'Saida' : 'Entrada';
+      return `${descricao};${valor};${data};${tipo}`;
+    });
+    const csvContent = header + rows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'transacoes.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
   if (!checkedAuth) return null;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="bg-white w-full max-w-xs sm:max-w-md rounded-xl flex flex-col py-8 px-6 shadow-lg relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-[#FAF6FE]">
+      <div className="bg-[white] w-full max-w-xs sm:max-w-md rounded-xl flex flex-col py-8 px-6 shadow-lg relative">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-[#8C11BE] text-2xl font-bold">Olá, Fulano</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-[#8C11BE] text-2xl font-bold">
+              Olá, {loadingName ? "Carregando..." : (userName ? userName : "Usuário")}
+            </h2>
+            <button title="Exportar para CSV" className="ml-2 text-[#8C11BE] text-2xl font-bold hover:text-[#A259FF] transition" onClick={exportToCSV}>
+              <IoDownloadOutline size={24} />
+            </button>
+          </div>
           <button title="Sair" className="text-[#8C11BE] text-2xl font-bold" onClick={handleLogout}>
             <IoExitOutline size={28} />
           </button>
@@ -98,7 +156,7 @@ export default function Home() {
           )}
           {!loading && !error && transactions.map((t) => (
             <div key={t._id} className="flex items-center justify-between text-gray-400 text-sm group">
-              <span>{formatDate(t.createdAt)}</span>
+              <span>{formatDate(t.date)}</span>
               <Link href={`/editar/${t._id}`} className="flex-1 ml-2 text-black hover:underline cursor-pointer">
                 {t.description}
               </Link>

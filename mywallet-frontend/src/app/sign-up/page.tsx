@@ -24,6 +24,7 @@ export default function SignUp() {
     setLoading(true);
     try {
       await signUp({ name, email, password, confirmPassword });
+      localStorage.setItem("userName", name);
       router.push("/home");
     } catch (err: any) {
       setError(err?.message || "Erro ao cadastrar");
@@ -43,7 +44,7 @@ export default function SignUp() {
           <input
             type="text"
             placeholder="Nome"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={name}
             onChange={e => setName(e.target.value)}
             required
@@ -51,7 +52,7 @@ export default function SignUp() {
           <input
             type="email"
             placeholder="E-mail"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
@@ -59,7 +60,7 @@ export default function SignUp() {
           <input
             type="password"
             placeholder="Senha"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
@@ -67,7 +68,7 @@ export default function SignUp() {
           <input
             type="password"
             placeholder="Confirme a senha"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={confirmPassword}
             onChange={e => setConfirmPassword(e.target.value)}
             required

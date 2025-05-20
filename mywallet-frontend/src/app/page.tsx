@@ -38,7 +38,7 @@ export default function Home() {
           <input
             type="email"
             placeholder="E-mail"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required
@@ -46,7 +46,7 @@ export default function Home() {
           <input
             type="password"
             placeholder="Senha"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={password}
             onChange={e => setPassword(e.target.value)}
             required

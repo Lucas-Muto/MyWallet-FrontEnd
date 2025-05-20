@@ -73,7 +73,7 @@ export default function EditarTransacao() {
           <input
             type="number"
             placeholder="Valor"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF]"
             value={valor}
             onChange={e => setValor(e.target.value)}
             required
@@ -83,7 +83,7 @@ export default function EditarTransacao() {
           <input
             type="text"
             placeholder="Descrição"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF]"
             value={descricao}
             onChange={e => setDescricao(e.target.value)}
             required

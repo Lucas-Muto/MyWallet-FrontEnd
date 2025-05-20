@@ -47,14 +47,14 @@ export default function NovaSaida() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="bg-white w-full max-w-xs sm:max-w-md rounded-xl flex flex-col items-center py-12 px-6 shadow-lg">
-        <h2 className="text-[#A259FF] text-2xl font-bold mb-8">Nova saída</h2>
+      <div className="bg-[#8C1AFF] w-full max-w-xs sm:max-w-md rounded-xl flex flex-col items-center py-12 px-6 shadow-lg">
+        <h2 className="text-[white] text-2xl font-bold mb-8">Nova saída</h2>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
           {error && <div className="bg-red-100 text-red-700 rounded p-2 text-center text-sm mb-2">{error}</div>}
           <input
             type="number"
             placeholder="Valor"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={valor}
             onChange={e => setValor(e.target.value)}
             required
@@ -64,7 +64,7 @@ export default function NovaSaida() {
           <input
             type="text"
             placeholder="Descrição"
-            className="rounded-lg px-4 py-3 text-lg outline-none border-none"
+            className="rounded-lg px-4 py-3 text-lg outline-none border-none bg-[#A259FF] text-white"
             value={descricao}
             onChange={e => setDescricao(e.target.value)}
             required
