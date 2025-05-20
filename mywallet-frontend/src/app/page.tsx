@@ -2,14 +2,29 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signIn } from "./api";
 
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Aqui futuramente será feita a requisição para login
+    setError(null);
+    setLoading(true);
+    try {
+      const { token } = await signIn({ email, password });
+      localStorage.setItem("token", token);
+      router.push("/home");
+    } catch (err: any) {
+      setError(err?.message || "Erro ao fazer login");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -19,6 +34,7 @@ export default function Home() {
           MyWallet
         </h2>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+          {error && <div className="bg-red-100 text-red-700 rounded p-2 text-center text-sm mb-2">{error}</div>}
           <input
             type="email"
             placeholder="E-mail"
@@ -37,9 +53,10 @@ export default function Home() {
           />
           <button
             type="submit"
-            className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#7c1fd1]"
+            className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#7c1fd1] disabled:opacity-60"
+            disabled={loading}
           >
-            Entrar
+            {loading ? "Entrando..." : "Entrar"}
           </button>
         </form>
         <p className="text-white mt-8 text-center text-sm font-semibold">

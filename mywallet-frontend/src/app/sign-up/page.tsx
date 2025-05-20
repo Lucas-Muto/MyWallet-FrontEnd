@@ -2,16 +2,34 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signUp } from "../api";
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Aqui futuramente será feita a requisição para cadastro
+    setError(null);
+    if (password !== confirmPassword) {
+      setError("As senhas não coincidem.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await signUp({ name, email, password });
+      router.push("/");
+    } catch (err: any) {
+      setError(err?.message || "Erro ao cadastrar");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -21,6 +39,7 @@ export default function SignUp() {
           MyWallet
         </h2>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+          {error && <div className="bg-red-100 text-red-700 rounded p-2 text-center text-sm mb-2">{error}</div>}
           <input
             type="text"
             placeholder="Nome"
@@ -55,10 +74,10 @@ export default function SignUp() {
           />
           <button
             type="submit"
-            className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#7c1fd1]"
-            style={{ boxShadow: '0 2px 8px 0 rgba(162,89,255,0.15)' }}
+            className="mt-2 bg-[#A259FF] text-white font-bold text-lg py-3 rounded-lg transition hover:bg-[#7c1fd1] disabled:opacity-60"
+            disabled={loading}
           >
-            Cadastrar
+            {loading ? "Cadastrando..." : "Cadastrar"}
           </button>
         </form>
         <p className="text-white mt-8 text-center text-sm font-semibold">
