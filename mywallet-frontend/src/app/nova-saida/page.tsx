@@ -10,13 +10,19 @@ export default function NovaSaida() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkedAuth, setCheckedAuth] = useState(false);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const token = localStorage.getItem("token");
     if (!token) {
       router.replace("/");
+      return;
     }
+    setCheckedAuth(true);
   }, [router]);
+
+  if (!checkedAuth) return null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

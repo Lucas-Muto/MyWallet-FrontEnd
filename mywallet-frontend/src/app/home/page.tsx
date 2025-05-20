@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getTransactions } from "../api";
 import { useRouter } from "next/navigation";
+import { getTransactions } from "../api";
 
 interface Transaction {
   _id: string;
@@ -18,14 +18,17 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [saldo, setSaldo] = useState(0);
+  const [checkedAuth, setCheckedAuth] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const token = localStorage.getItem("token");
     if (!token) {
       router.replace("/");
       return;
     }
+    setCheckedAuth(true);
     setLoading(true);
     getTransactions(token)
       .then((data) => {
@@ -43,6 +46,8 @@ export default function Home() {
       .catch((err) => setError(err?.message || "Erro ao buscar transações"))
       .finally(() => setLoading(false));
   }, [router]);
+
+  if (!checkedAuth) return null;
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
