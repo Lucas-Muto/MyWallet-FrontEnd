@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signUp, signIn } from "../api";
+import Image from "next/image";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -41,9 +42,9 @@ export default function SignUp() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="bg-[#8C1AFF] w-full max-w-xs sm:max-w-md rounded-xl flex flex-col items-center py-16 px-6 shadow-lg">
-        <h2 className="text-white text-4xl font-bold mb-10 font-mono tracking-wider select-none">
-          MyWallet
-        </h2>
+        <div className="mb-10 select-none">
+          <Image src="/logo.svg" alt="MyWallet Logo" width={200} height={51} priority />
+        </div>
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
           {error && <div className="bg-red-100 text-red-700 rounded p-2 text-center text-sm mb-2">{error}</div>}
           <input

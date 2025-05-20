@@ -2,6 +2,13 @@ import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ServiceWorkerRegister from "./ServiceWorkerRegister";
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-poppins"
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,7 +27,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#8C11BE" />
         <meta name="background-color" content="#FAF6FE" />
       </head>
-      <body className="font-sans bg-[#FAF6FE]">
+      <body className={`${poppins.variable} font-sans bg-[#FAF6FE]`}>
         <ServiceWorkerRegister />
         {children}
       </body>
