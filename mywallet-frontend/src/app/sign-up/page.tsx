@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signUp } from "../api";
+import { signUp, signIn } from "../api";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -25,6 +25,11 @@ export default function SignUp() {
     try {
       await signUp({ name, email, password, confirmPassword });
       localStorage.setItem("userName", name);
+      const { token } = await signIn({ email, password });
+      localStorage.setItem("token", token);
+      if (typeof window !== "undefined" && document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       router.push("/home");
     } catch (err: any) {
       setError(err?.message || "Erro ao cadastrar");

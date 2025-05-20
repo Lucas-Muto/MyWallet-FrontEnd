@@ -19,6 +19,9 @@ export default function Home() {
     try {
       const { token } = await signIn({ email, password });
       localStorage.setItem("token", token);
+      if (typeof window !== "undefined" && document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
       router.push("/home");
     } catch (err: any) {
       setError(err?.message || "Erro ao fazer login");
